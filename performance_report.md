@@ -95,13 +95,13 @@ df = pl.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
 ### 2. Updating columns/Data Manipulation
 ```python
 # Pandas
-df_symbol[f"{col}_rets_mean_{window}"] = (
-    df_symbol[f"{col}_rets"].rolling(window=window).mean()
+df_symbol[f"rets_mean_{window}"] = (
+    df_symbol[f"rets"].rolling(window=window).mean()
 )
 
 # Polars
 df_symbol = df_symbol.with_columns([
-    pl.col(col).pct_change().rolling_mean(window_size=window).alias(f"{col}_rets_mean_{window}")
+    pl.col(col).pct_change().rolling_mean(window_size=window).alias(f"_rets_mean_{window}")
 ])
 
 ```
@@ -121,6 +121,7 @@ df = (
 )
 ```
 > Polars does NOT have index functionality so we add manually as above.
+
 
 
 
