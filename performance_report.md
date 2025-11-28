@@ -1,0 +1,137 @@
+# Performance Report: Rolling Metrics Parallel Computation
+
+This report summarizes the performance of rolling metrics computation across three symbols(AAPL, MSFT, SPY) using **Pandas** and **Polars**, with both **Threading** and **Multiprocessing** approaches. The goal is to compare **execution time** and **CPU utilization** for different window sizes.
+
+
+To measure CPU utilization during the execution of the rolling metrics computations, we sampled the CPU usage of the process at 0.5-second intervals using psutil. These periodic readings were then **averaged** to obtain the mean CPU usage over the duration of each computation. This method provides an approximate view of the CPU load while the parallel tasks were running.
+
+
+--- 
+
+## Statistical Rolling Metrics
+![market data stats preview](./img/market_data_stats.png)
+
+---
+
+## Ingestion Time
+| Library | Ingestion Time (s) | Mem Usage(MiB) |
+|---------|-----------------|-----------|
+| Pandas  | 0.1431          | 273.13    |
+| Polars  | 0.1259          | 360.77    |
+
+## Rolling Metrics Execution Time (Elapsed)
+| Library | Symbol | Window | Sample Size | Execution Time (s) |
+|---------|--------|--------|-------------|------------------|
+| Pandas  | AAPL   | 20     | 1000        | 0.0252           |
+| Polars  | AAPL   | 20     | 1000        | 0.0075           |
+
+**Observations:**
+- Polars outperforms Pandas in Ingestion time by leveraging more memory on the runtime.
+
+
+## Performance Metrics
+---
+
+![performance data stats preview](./img/performance_barchart.png)
+
+
+### 1. Window Size: 30
+
+| Library | Method           | Time (s) | Avg CPU (%) |
+|---------|-----------------|-----------|-------------|
+| Pandas  | Threading        | 0.06      | 37.2        |
+| Pandas  | Multiprocessing  | 3.17      | 5.8         |
+| Polars  | Threading        | 0.02      | 232.7       |
+| Polars  | Multiprocessing  | 3.26      | 6.3         |
+
+**Observations:**
+
+- Threading is extremely fast for small window sizes.
+- Polars shows significantly higher CPU utilization with threading, suggesting it is more parallel internally.
+- Multiprocessing overhead dominates for small data chunks, leading to longer times and low CPU usage.
+
+---
+
+### 2. Window Size: 1000
+
+| Library | Method           | Time (s) | Avg CPU (%) |
+|---------|-----------------|-----------|-------------|
+| Pandas  | Threading        | 0.06      | 116.3       |
+| Pandas  | Multiprocessing  | 3.19      | 3.0         |
+| Polars  | Threading        | 0.02      | 347.2       |
+| Polars  | Multiprocessing  | 3.22      | 4.3         |
+
+**Observations:**
+
+- Increasing the window size barely affects threading times due to efficient vectorized operations.
+- Threading CPU usage increases substantially with Polars, showing strong internal parallelism.
+- Multiprocessing still suffers from overhead; for small-to-medium workloads, threading is more efficient.
+
+---
+
+### 3. Summary
+
+- **Threading** outperforms multiprocessing for small-to-medium data chunks, especially with Polars.
+- **Multiprocessing** introduces overhead that is only worth it for very large datasets or CPU-bound computations where GIL is limiting.
+- Polars demonstrates stronger CPU utilization and faster execution than Pandas for the same tasks.
+- Due to Python's Global Interpreter Lock (GIL), multithreading has limited parallel performance for CPU-bound tasks; if the dataset is very large, multiprocessing is preferred for computationally intensive operations.
+- For the dataset and window size tested, execution time was dominated by Threading, with Multiprocessing showing slower performance due to process creation overhead. This highlights that parallel execution speed gains are only realized for larger datasets or heavier computations
+---
+
+## Syntax difference: Pandas vs Polars
+### 1. Imports and Dataframe creation
+```python
+# Pandas
+import pandas as pd
+df = pd.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
+
+# Polars
+import polars as pl
+df = pl.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
+```
+> They are similar in importing and making dataframes.
+
+### 2. Updating columns/Data Manipulation
+```python
+# Pandas
+df_symbol[f"{col}_rets_mean_{window}"] = (
+    df_symbol[f"{col}_rets"].rolling(window=window).mean()
+)
+
+# Polars
+df_symbol = df_symbol.with_columns([
+    pl.col(col).pct_change().rolling_mean(window_size=window).alias(f"{col}_rets_mean_{window}"),
+    pl.col(col).pct_change().rolling_std(window_size=window, ddof=1).alias(f"{col}_rets_st{window}"),
+])
+
+```
+> Pandas has more eager approach in data manipulation whereas Polars has lazy approach. 
+> Polars has unique way of creating columns with 'with_columns'
+
+### 3. Index
+```python
+def load_data_pandas(file_path: str) -> pd.DataFrame:
+    start = time.perf_counter()
+    df = pd.read_csv(file_path, index_col='timestamp', parse_dates=True)
+    end = time.perf_counter()
+
+    elapsed_time = end - start
+    mem = memory_usage((pd.read_csv, (file_path,)), max_usage=True)    
+    return df, elapsed_time, mem
+
+def load_data_polars(file_path: str) -> pl.DataFrame:
+    start = time.perf_counter()
+    df = (
+        pl.read_csv(file_path, has_header=True, try_parse_dates=True)
+          .sort("timestamp")
+          .with_columns(pl.col("timestamp").alias("_index"))
+    )
+    end = time.perf_counter()
+
+    elapsed_time = end - start
+    mem = memory_usage((pl.read_csv, (file_path,)), max_usage=True)
+
+    return df, elapsed_time, mem
+```
+> Polars does NOT have index functionality so we add manually as above.
+

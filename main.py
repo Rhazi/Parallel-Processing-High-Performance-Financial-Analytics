@@ -4,7 +4,7 @@ import pandas as pd
 from reporting import measure_cpu_mem_exec_time
 
 def main():
-    window = 1000
+    window = 30
     file_path = "./data/market_data-1.csv"
 
     ########______________________________________DATA INGESTION____________________________________###################
