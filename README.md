@@ -130,17 +130,6 @@ data = load_data_pandas("data/sample_prices.csv")
 metrics = rolling_metrics_pandas(data['returns'], 'AAPL', ['price'])
 ```
 
-## Development & Testing
-
-### Running Tests
-```bash
-# Run all tests
-pytest
-
-# Run with coverage
-pytest --cov=. --cov-report=html
-```
-
 ### Benchmarking
 The project includes built-in benchmarking tools:
 ```python
@@ -167,10 +156,8 @@ plot_rolling_metrics(df_pandas_metrics, window=window, subsample_size=subsample_
 ## Contributing
 
 1. Follow existing code structure and naming conventions
-2. Add tests for new functionality in `tests/`
-3. Update this README for new modules or features
-4. Ensure all tests pass and performance doesn't regress
-5. Profile new code for memory and CPU usage
+2. Update this README for new modules or features
+3. Profile new code for memory and CPU usage
 
 ## Performance Reports
 
