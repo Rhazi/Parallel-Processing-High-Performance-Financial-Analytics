@@ -22,8 +22,8 @@ To measure CPU utilization during the execution of the rolling metrics computati
 ## Rolling Metrics Execution Time (Elapsed)
 | Library | Symbol | Window | Sample Size | Execution Time (s) |
 |---------|--------|--------|-------------|------------------|
-| Pandas  | AAPL   | 30     | 1000        | 0.0327           |
-| Polars  | AAPL   | 30     | 1000        | 0.0196           |
+| Pandas  | AAPL   | 20     | 1000        | 0.0327           |
+| Polars  | AAPL   | 20     | 1000        | 0.0196           |
 
 **Observations:**
 - Polars outperforms Pandas in Ingestion time by leveraging more memory on the runtime.
@@ -135,6 +135,7 @@ def load_data_polars(file_path: str) -> pl.DataFrame:
     return df, elapsed_time, mem
 ```
 > Polars does NOT have index functionality so we add manually as above.
+
 
 
 
