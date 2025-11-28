@@ -1,7 +1,7 @@
 # Parallel Processing & High-Performance Financial Analytics
 
 ## Overview
-This project demonstrates advanced parallel processing techniques and high-performance computing methods for financial analytics. It focuses on rolling metrics calculation, portfolio optimization, and multi-threaded data processing using modern Python libraries and design patterns.
+This project demonstrates advanced parallel processing techniques and high-performance computing methods for financial analytics. It focuses on rolling metrics calculation, and multi-threaded data processing using modern Python libraries.
 
 ## Setup Instructions
 
