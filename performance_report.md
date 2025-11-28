@@ -16,8 +16,8 @@ To measure CPU utilization during the execution of the rolling metrics computati
 ## Ingestion Time
 | Library | Ingestion Time (s) | Mem Usage(MiB) |
 |---------|-----------------|-----------|
-| Pandas  | 0.1431          | 285.92    |
-| Polars  | 0.1259          | 364.05    |
+| Pandas  | 0.139           | 216.71    |
+| Polars  | 0.049           | 264.67    |
 
 ## Rolling Metrics Execution Time (Elapsed)
 | Library | Symbol | Window | Sample Size | Execution Time (s) |
@@ -135,6 +135,7 @@ def load_data_polars(file_path: str) -> pl.DataFrame:
     return df, elapsed_time, mem
 ```
 > Polars does NOT have index functionality so we add manually as above.
+
 
 
 
