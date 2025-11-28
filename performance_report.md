@@ -9,7 +9,7 @@ To measure CPU utilization during the execution of the rolling metrics computati
 --- 
 
 ## Statistical Rolling Metrics
-![market data stats preview](./img/market_data_stats.png)
+![market data stats preview](./img/rolling_metrics.png)
 
 ---
 
@@ -22,8 +22,8 @@ To measure CPU utilization during the execution of the rolling metrics computati
 ## Rolling Metrics Execution Time (Elapsed)
 | Library | Symbol | Window | Sample Size | Execution Time (s) |
 |---------|--------|--------|-------------|------------------|
-| Pandas  | AAPL   | 20     | 1000        | 0.0252           |
-| Polars  | AAPL   | 20     | 1000        | 0.0075           |
+| Pandas  | AAPL   | 30     | 1000        | 0.0252           |
+| Polars  | AAPL   | 30     | 1000        | 0.0075           |
 
 **Observations:**
 - Polars outperforms Pandas in Ingestion time by leveraging more memory on the runtime.
@@ -32,17 +32,18 @@ To measure CPU utilization during the execution of the rolling metrics computati
 ## Performance Metrics
 ---
 
-![performance data stats preview](./img/performance_barchart.png)
+![performance data stats preview](./img/execution_time.png)
 
 
 ### 1. Window Size: 30
 
 | Library | Method           | Time (s) | Avg CPU (%) |
 |---------|-----------------|-----------|-------------|
-| Pandas  | Threading        | 0.06      | 37.2        |
-| Pandas  | Multiprocessing  | 3.17      | 5.8         |
-| Polars  | Threading        | 0.02      | 232.7       |
-| Polars  | Multiprocessing  | 3.26      | 6.3         |
+| Pandas  | Threading        | 0.06      | 69.75        |
+| Pandas  | Multiprocessing  | 0.92      | 6.19         |
+| Polars  | Threading        | 0.02      | 142.0       |
+| Polars  | Multiprocessing  | 0.94      | 10.27         |
+
 
 **Observations:**
 
@@ -56,10 +57,10 @@ To measure CPU utilization during the execution of the rolling metrics computati
 
 | Library | Method           | Time (s) | Avg CPU (%) |
 |---------|-----------------|-----------|-------------|
-| Pandas  | Threading        | 0.06      | 116.3       |
-| Pandas  | Multiprocessing  | 3.19      | 3.0         |
-| Polars  | Threading        | 0.02      | 347.2       |
-| Polars  | Multiprocessing  | 3.22      | 4.3         |
+| Pandas  | Threading        | 0.06      | 68.55       |
+| Pandas  | Multiprocessing  | 2.38      | 2.74         |
+| Polars  | Threading        | 0.02      | 138.5       |
+| Polars  | Multiprocessing  | 2.35      | 4.3         |
 
 **Observations:**
 
@@ -134,4 +135,5 @@ def load_data_polars(file_path: str) -> pl.DataFrame:
     return df, elapsed_time, mem
 ```
 > Polars does NOT have index functionality so we add manually as above.
+
 
