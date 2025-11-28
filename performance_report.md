@@ -35,7 +35,7 @@ To measure CPU utilization during the execution of the rolling metrics computati
 ![performance data stats preview](./img/execution_time.png)
 
 
-### 1. Window Size: 30
+### 1. Window Size: 20
 
 | Library | Method           | Time (s) | Avg CPU (%) |
 |---------|-----------------|-----------|-------------|
@@ -65,7 +65,7 @@ To measure CPU utilization during the execution of the rolling metrics computati
 **Observations:**
 
 - Increasing the window size barely affects threading times due to efficient vectorized operations.
-- Threading CPU usage increases substantially with Polars, showing strong internal parallelism.
+- Threading CPU usage stays high with Polars, showing strong internal parallelism.
 - Multiprocessing still suffers from overhead; for small-to-medium workloads, threading is more efficient.
 
 ---
@@ -101,40 +101,27 @@ df_symbol[f"{col}_rets_mean_{window}"] = (
 
 # Polars
 df_symbol = df_symbol.with_columns([
-    pl.col(col).pct_change().rolling_mean(window_size=window).alias(f"{col}_rets_mean_{window}"),
-    pl.col(col).pct_change().rolling_std(window_size=window, ddof=1).alias(f"{col}_rets_st{window}"),
+    pl.col(col).pct_change().rolling_mean(window_size=window).alias(f"{col}_rets_mean_{window}")
 ])
 
 ```
-> Pandas has more eager approach in data manipulation whereas Polars has lazy approach. 
-> Polars has unique way of creating columns with 'with_columns'
+> Pandas has a more eager approach in data manipulation whereas Polars has a lazy approach. 
+> Polars has a unique way of creating columns with 'with_columns'
 
 ### 3. Index
 ```python
-def load_data_pandas(file_path: str) -> pd.DataFrame:
-    start = time.perf_counter()
-    df = pd.read_csv(file_path, index_col='timestamp', parse_dates=True)
-    end = time.perf_counter()
+#Pandas
+df = pd.read_csv(file_path, index_col='timestamp', parse_dates=True)
 
-    elapsed_time = end - start
-    mem = memory_usage((pd.read_csv, (file_path,)), max_usage=True)    
-    return df, elapsed_time, mem
-
-def load_data_polars(file_path: str) -> pl.DataFrame:
-    start = time.perf_counter()
-    df = (
-        pl.read_csv(file_path, has_header=True, try_parse_dates=True)
-          .sort("timestamp")
-          .with_columns(pl.col("timestamp").alias("_index"))
-    )
-    end = time.perf_counter()
-
-    elapsed_time = end - start
-    mem = memory_usage((pl.read_csv, (file_path,)), max_usage=True)
-
-    return df, elapsed_time, mem
+#Polars
+df = (
+    pl.read_csv(file_path, has_header=True, try_parse_dates=True)
+      .sort("timestamp")
+      .with_columns(pl.col("timestamp").alias("_index"))
+)
 ```
 > Polars does NOT have index functionality so we add manually as above.
+
 
 
 
