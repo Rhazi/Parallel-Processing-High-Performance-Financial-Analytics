@@ -1,4 +1,4 @@
-# A7: Parallel Processing & High-Performance Financial Analytics
+# Parallel Processing & High-Performance Financial Analytics
 
 ## Overview
 This project demonstrates advanced parallel processing techniques and high-performance computing methods for financial analytics. It focuses on rolling metrics calculation, portfolio optimization, and multi-threaded data processing using modern Python libraries and design patterns.
@@ -13,7 +13,7 @@ This project demonstrates advanced parallel processing techniques and high-perfo
 1. **Clone the repository** (if not already done):
    ```bash
    git clone <repository-url>
-   cd group8/A7
+   cd Parallel-Processing-High-Performance-Financial-Analytics/
    ```
 
 2. **Install dependencies**:
@@ -80,33 +80,13 @@ This project demonstrates advanced parallel processing techniques and high-perfo
 - **Design Patterns**: Producer-Consumer, MapReduce
 - **Performance**: Automatic CPU core detection and load balancing
 
-#### `portfolio.py`
-- **Purpose**: Portfolio management
-- **Functionality**:
-  - Portfolio construction
-  - Risk-return optimization
-  - Multi-asset allocation strategies
-- **Parallelization**: Concurrent portfolio scenario analysis
-- **Integration**: Works with metrics.py for performance calculation
-
 #### `reporting.py`
 - **Purpose**: Performance reporting and visualization
 - **Features**:
   - Parallel processing performance comparisons
   - Memory usage analysis
   - Execution time benchmarking
-  - HTML/PDF report generation
 - **Visualizations**: Performance charts, scalability analysis
-
-### Design Patterns
-
-#### `patterns/builder_pattern.py`
-- **Purpose**: Builder pattern implementation for complex financial objects
-- **Use Cases**:
-  - Portfolio construction with validation
-  - Multi-step metric calculation pipelines
-  - Configuration object building
-- **Benefits**: Thread-safe construction, immutable results
 
 ### Configuration & Data
 
@@ -118,23 +98,6 @@ This project demonstrates advanced parallel processing techniques and high-perfo
   - Configuration templates
 - **Performance**: Optimized file formats for fast loading
 
-### Testing Framework
-
-#### `tests/conftest.py`
-- **Purpose**: Pytest configuration and shared fixtures
-- **Features**:
-  - Test data generation
-  - Performance test utilities
-  - Parallel test execution setup
-
-#### `tests/test_rolling_metrics.py`
-- **Purpose**: Comprehensive testing for rolling metrics calculations
-- **Coverage**:
-  - Correctness verification against known results
-  - Performance benchmarking
-  - Edge case handling
-  - Parallel vs serial result consistency
-
 ## Key Features
 
 ### 1. **High-Performance Data Processing**
@@ -145,14 +108,10 @@ This project demonstrates advanced parallel processing techniques and high-perfo
 ### 2. **Parallel Processing Strategies**
 - **Thread-based Parallelism**: CPU-bound tasks using ThreadPoolExecutor
 - **Process-based Parallelism**: Intensive computations using multiprocessing
-- **Async Processing**: I/O-bound operations with asyncio
 - **Hybrid Approaches**: Combined strategies for optimal performance
 
 ### 3. **Financial Analytics**
 - **Rolling Metrics**: Moving averages, volatility, correlation
-- **Risk Analysis**: VaR, Expected Shortfall, Maximum Drawdown
-- **Portfolio Optimization**: Mean-variance, risk parity, factor models
-- **Performance Attribution**: Alpha, beta, information ratio
 
 ### 4. **Scalability & Performance**
 - **Automatic Scaling**: Adapts to available CPU cores
@@ -204,7 +163,6 @@ plot_rolling_metrics(df_pandas_metrics, window=window, subsample_size=subsample_
 - **pandas**: Data manipulation and analysis
 - **numpy**: Numerical computing
 - **memory-profiler**: Memory usage monitoring
-- **pytest**: Testing framework
 
 ## Contributing
 
@@ -222,8 +180,8 @@ The system generates detailed performance reports in `performance_report.md` inc
 - Scalability metrics
 - Optimization recommendations
 
-## Authors
-- Group 8, FINM325 - University of Chicago
+## Author
+- Mohammed Rhazi - University of Chicago (mrhazi@uchicago.edu)
 
 ---
 
