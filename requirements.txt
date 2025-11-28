@@ -1,0 +1,5 @@
+polars
+pandas
+memory_profiler
+pytest
+numpy

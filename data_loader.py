@@ -29,11 +29,11 @@ def load_data_polars(file_path:str) -> pl.DataFrame:
 
 if __name__ == "__main__":
     file_path = "./data/market_data-1.csv"
-    df, elapsed_time, mem = load_data_pandas(file_path)
+    _, elapsed_time, mem = load_data_pandas(file_path)
     print(elapsed_time)
     print(mem)
 
-    df_polars, time_polars, mem_polars = load_data_polars(file_path)
+    _, time_polars, mem_polars = load_data_polars(file_path)
     print(time_polars)
     print(mem_polars)
 
